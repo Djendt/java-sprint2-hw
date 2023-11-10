@@ -3,48 +3,26 @@ import java.util.Scanner;
 public  class Main {
     public  static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
-        YearReport yearReport = new YearReport();
-        MonthReport monthlyReport = new MonthReport();
-        Verify verify;
+        Year year = new Year();
+        Month month = new Month();
+        Verify verify = new Verify(month, year);
 
-        printMenu();
+
+
         while (true) {
+            System.out.println();
+            printMenu();
             int command = scanner.nextInt();
-
             if (command == 1) {
-                monthlyReport.stringSeparator();
+                month.loadFile();
             } else if (command == 2) {
-                yearReport.stringSeparator();
+                year.yearLoadFile("y.2021.csv");
             } else if (command == 3) {
-                if (monthlyReport.allData.isEmpty() | yearReport.allData.isEmpty()) {
-                    System.out.println("Отчёты не загружены. Для возврата в меню нажмите 6");
-                } else {
-                    verify = new Verify(monthlyReport, yearReport);
-                    if (verify.check()) {
-                        System.out.println("Сверка успешно завершена. Данные корректны");
-                    } else {
-                        System.out.println(verify.wrongMonth + " содержит ошибочные данные!");
-                    }
-                }
+                verify.check();
             } else if (command == 4) {
-                if (monthlyReport.allData.isEmpty()) {
-                    System.out.println("Загрузка отчета не выполнена. Для возврата в меню нажмите 6.");
-                } else {
-                    monthlyReport.printResultMonth();
-                    System.out.println("");
-                    System.out.println("Для возврата в меню нажмите 6.");
-                }
+                month.getMontyReport();
             } else if (command == 5) {
-                if (yearReport.allData.isEmpty()) {
-                    System.out.println("Загрузка отчета не выполнена. Для возврата в меню нажмите 6.");
-                } else {
-                    yearReport.printResultYear();
-                    System.out.println("");
-                    System.out.println("Для возврата в меню нажмите 6.");
-                }
-            } else if (command == 6) {
-                System.out.println("");
-                printMenu();
+                year.printAll();
             } else if (command == 0) {
                 System.out.println("Выход из приложения");
                 return;

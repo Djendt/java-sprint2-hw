@@ -1,70 +1,62 @@
-import java.util.ArrayList;
+import java.util.HashMap;
 
 public class Verify {
+    public Month month;
+    public Year year;
 
-    MonthReport monthReport;
-    YearReport yearReport;
-    ArrayList<Integer> incomeYR = new ArrayList<>();
-    ArrayList<Integer> expenseYR = new ArrayList<>();
-    ArrayList<Integer> incomeMR = new ArrayList<>();
-    ArrayList<Integer> expenseMR = new ArrayList<>();
-    int allIncomesYR;
-    int allExpensesYR;
-    String wrongMonth;
+    HashMap<Integer, Integer> checkerProfit = new HashMap<>();
+    HashMap<Integer, Integer> checkerSpent = new HashMap<>();
 
-    public Verify(MonthReport monthReport, YearReport yearReport) {
-        this.monthReport = monthReport;
-        this.yearReport = yearReport;
-
-        int sumOfIncome = 0;
-        int sumOfExpense = 0;
-        for (int i = 0; i < yearReport.allData.size(); i++) {
-            int expense;
-            int income;
-            if (yearReport.allData.get(i).isExpense) {
-                expense = yearReport.allData.get(i).sumOfOne;
-                sumOfExpense += expense;
-                expenseYR.add(expense);
-            }
-            else {
-                income = yearReport.allData.get(i).sumOfOne;
-                sumOfIncome += income;
-                incomeYR.add(income);
-            }
-        }
-        allIncomesYR = sumOfIncome;
-        allExpensesYR = sumOfExpense;
-
-        for (int i = 0; i < yearReport.allData.size() / 2; i++) {
-            int sumOfIncomeMR = 0;
-            int sumOfExpenseMR = 0;
-            for (Record recordCh : monthReport.allData.get(yearReport.namesMonth[i])) {
-                if (recordCh.isExpense) {
-                    sumOfExpenseMR += recordCh.quantity * recordCh.sumOfOne;
-                }
-                else {
-                    sumOfIncomeMR += recordCh.quantity * recordCh.sumOfOne;
-                }
-            }
-            expenseMR.add(sumOfExpenseMR);
-            incomeMR.add(sumOfIncomeMR);
-        }
+    public Verify(Month month, Year year) {
+        this.month = month;
+        this.year = year;
     }
 
-    public boolean check() {
-        boolean tmpBoolean = false;
-        for (int j = 0; j < yearReport.allData.size() / 2; j++) {
-            if ((incomeYR.get(j).equals(incomeMR.get(j))) & (expenseMR.get(j).equals(expenseMR.get(j)))) {
-                tmpBoolean = true;
-            }
-            else {
-                wrongMonth = yearReport.namesMonth[j];
-                tmpBoolean = false;
+    public void check() {
+        if (month.hash.size() == 0 || year.saleYear.size() == 0) {
+            System.out.println("Для сверки сначала считайте отчет.");
+            return;
+        }
+
+        month.getIncomeAndSpend();
+
+        if (year.profitOrders.equals(month.profitOrders)) {
+            System.out.println();
+            System.out.println("Сверка отчетов о доходах прошла успешно.");
+        } else {
+            checkerProfit = month.profitOrders;
+            for (Integer month : year.profitOrders.keySet()) {
+                if (checkerProfit.containsKey(month)) {
+                    if (!checkerProfit.get(month).equals(year.profitOrders.get(month))) {
+                        if (month == 1) {
+                            System.out.println("Отчет о доходах за Январь не сошелся.");
+                        } else if (month == 2) {
+                            System.out.println("Отчет о доходах за Февраль не сошелся.");
+                        } else if (month == 3) {
+                            System.out.println("Отчет о доходах за Март не сошелся.");
+                        }
+                    }
+                }
             }
         }
-        return tmpBoolean;
+
+        if (year.spendOrders.equals(month.spendOrders)) {
+            System.out.println("Сверка отчетов о расходах прошла успешно.");
+        } else {
+            checkerSpent = month.spendOrders;
+            for (Integer month : year.spendOrders.keySet()) {
+                if (checkerSpent.containsKey(month)) {
+                    if (!checkerSpent.get(month).equals(year.spendOrders.get(month))) {
+                        if (month == 1) {
+                            System.out.println("Отчет о расходах за Январь не сошелся.");
+                        } else if (month == 2) {
+                            System.out.println("Отчет о расходах за Февраль не сошелся.");
+                        } else if (month == 3) {
+                            System.out.println("Отчет о расходах за Март не сошелся.");
+                        }
+                    }
+                }
+            }
+        }
     }
-
-
-
 }
